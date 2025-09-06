@@ -41,22 +41,26 @@ model_list:
   # --- Anthropic Claude Models ---
   - model_name: claude-opus-4.1
     litellm_params:
-      model: claude-opus-4-1  # Claude Opus 4.1 (generic, no date)
+      model: anthropic/claude-opus-4-1  # Claude Opus 4.1 (generic, no date)
       api_key: os.environ/ANTHROPIC_API_KEY
       
   - model_name: claude-opus-4
     litellm_params:
-      model: claude-opus-4-0  # Claude Opus 4 (generic, no date)
+      model: anthropic/claude-opus-4-0  # Claude Opus 4 (generic, no date)
       api_key: os.environ/ANTHROPIC_API_KEY
       
   - model_name: claude-thinking
     litellm_params:
-      model: claude-opus-4-1  # Claude Opus 4.1 with extended thinking (generic)
+      model: anthropic/claude-opus-4-1  # Claude Opus 4.1 with extended thinking (generic)
       api_key: os.environ/ANTHROPIC_API_KEY
+      thinking: {"type": "enabled", "budget_tokens": 4096}  # Anthropic 'thinking' param
+      max_tokens: 8192  # Must be greater than thinking.budget_tokens
+      # Helpful for Open WebUI to render <think>…</think> content:
+      merge_reasoning_content_in_choices: true
       
   - model_name: claude-sonnet-4
     litellm_params:
-      model: claude-3-5-sonnet-20241022  # Claude 3.5 Sonnet (latest available)
+      model: anthropic/claude-3-5-sonnet-20241022  # Claude 3.5 Sonnet (latest available)
       api_key: os.environ/ANTHROPIC_API_KEY
 
   # --- Google Gemini Models ---
@@ -94,6 +98,7 @@ litellm_settings:
   drop_params: true          # Strip unsupported params per provider
   num_retries: 3             # Retry failed requests
   request_timeout: 300       # Timeout in seconds
+  json_logs: true            # JSON formatted logs
   # No fallbacks configured per user request
 
 router_settings:
@@ -103,7 +108,7 @@ general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY    # Admin key for all operations
   database_url: os.environ/DATABASE_URL        # PostgreSQL for tracking
   database_type: "postgres"
-  database_connection_pool_size: 10
+  database_connection_pool_limit: 10
   
   # Admin UI settings
   ui_username: os.environ/UI_USERNAME
@@ -113,8 +118,7 @@ general_settings:
   # CORS settings for web access
   cors_allowed_origins: ["https://litellm.ai-servicers.com", "https://open-webui.ai-servicers.com"]
   
-  # Logging
-  json_logs: true
+  # Logging level
   log_level: "INFO"
   
   # Disable telemetry

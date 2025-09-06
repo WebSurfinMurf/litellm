@@ -6,6 +6,7 @@
 - Repository: /home/administrator/projects/litellm
 - Created: 2025-01-11
 - Updated: 2025-01-11
+- Models Configured: 19 (7 GPT, 4 Claude, 8 Gemini)
 
 ## Configuration
 - Keycloak Client: litellm (pending full SSO integration)
@@ -34,20 +35,31 @@
 - Admin Password: LiteLLMAdmin2025!
 - Master Key: sk-e0b742bc6575adf26c7d356c49c78d8fd08119fcde1d6e188d753999b5f956fc
 
-## Available Models
-### OpenAI/ChatGPT
-- `gpt` - GPT-4o (latest)
-- `gpt-4-turbo` - GPT-4 Turbo
+## Available Models (19 total)
+### OpenAI/ChatGPT (7 models)
+- `gpt-5` - GPT-5 (reasoning model, brief responses)
+- `gpt-5-chat-latest` - GPT-5 Chat (shows detailed work)
+- `gpt-5-mini` - GPT-5 Mini (smaller, faster)
+- `gpt-5-nano` - GPT-5 Nano (smallest, fastest)
+- `gpt-4.1` - GPT-4.1
+- `gpt-4o` - GPT-4 Omni
+- `gpt-4o-mini` - GPT-4 Omni Mini
 
-### Anthropic/Claude
-- `claude` - Claude 3 Opus
-- `claude-sonnet` - Claude 3.5 Sonnet
-- `claude-haiku` - Claude 3 Haiku
+### Anthropic/Claude (4 models)
+- `claude-opus-4.1` - Claude Opus 4.1 (latest, most capable)
+- `claude-opus-4` - Claude Opus 4
+- `claude-thinking` - Claude Opus 4.1 with extended thinking
+- `claude-sonnet-4` - Claude 3.5 Sonnet (fast, balanced)
 
-### Google/Gemini
-- `gemini` - Gemini 1.5 Pro
-- `gemini-flash` - Gemini 1.5 Flash
-- `gemini-pro` - Gemini Pro
+### Google/Gemini (8 models)
+- `gemini-2.5-pro` - Gemini 2.5 Pro (advanced reasoning)
+- `gemini-2.5-flash` - Gemini 2.5 Flash (fast)
+- `gemini-2.5-flash-lite` - Gemini 2.5 Flash Lite (lightweight)
+- `gemini-2.5-flash-image-preview` - Gemini 2.5 Flash Image (multimodal)
+- `gemini-2.5-flash-preview-tts` - Gemini 2.5 TTS Flash
+- `gemini-2.5-pro-preview-tts` - Gemini 2.5 TTS Pro
+- `gemini-1.5-pro` - Gemini 1.5 Pro (legacy)
+- `gemini-1.5-flash` - Gemini 1.5 Flash (legacy)
 
 ## API Usage Examples
 
@@ -57,36 +69,36 @@ curl https://litellm.ai-servicers.com/v1/models \
   -H "Authorization: Bearer sk-e0b742bc6575adf26c7d356c49c78d8fd08119fcde1d6e188d753999b5f956fc"
 ```
 
-### Test ChatGPT
+### Test GPT-5
 ```bash
 curl https://litellm.ai-servicers.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-e0b742bc6575adf26c7d356c49c78d8fd08119fcde1d6e188d753999b5f956fc" \
   -d '{
-    "model": "gpt",
-    "messages": [{"role": "user", "content": "Say hello from GPT-4o"}]
+    "model": "gpt-5",
+    "messages": [{"role": "user", "content": "Say hello"}]
   }'
 ```
 
-### Test Claude
+### Test Claude Opus 4.1
 ```bash
 curl https://litellm.ai-servicers.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-e0b742bc6575adf26c7d356c49c78d8fd08119fcde1d6e188d753999b5f956fc" \
   -d '{
-    "model": "claude",
-    "messages": [{"role": "user", "content": "Say hello from Claude"}]
+    "model": "claude-opus-4.1",
+    "messages": [{"role": "user", "content": "Say hello"}]
   }'
 ```
 
-### Test Gemini
+### Test Gemini 2.5 Pro
 ```bash
 curl https://litellm.ai-servicers.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-e0b742bc6575adf26c7d356c49c78d8fd08119fcde1d6e188d753999b5f956fc" \
   -d '{
-    "model": "gemini",
-    "messages": [{"role": "user", "content": "Say hello from Gemini"}]
+    "model": "gemini-2.5-pro",
+    "messages": [{"role": "user", "content": "Say hello"}]
   }'
 ```
 
