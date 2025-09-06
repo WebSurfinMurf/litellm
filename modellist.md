@@ -14,7 +14,7 @@
 | GPT-4o Mini | `gpt-4o-mini` |
 | **Anthropic/Claude Models** | |
 | Claude Opus 4.1 | `claude-opus-4-1` |
-| Claude Opus 4 | `claude-opus-4-20250514` |
+| Claude Opus 4 | `claude-opus-4-0` |
 | Claude Thinking | `claude-opus-4-1` |
 | Claude Sonnet 4 | `claude-3-5-sonnet-20241022` |
 | **Google/Gemini Models** | |
