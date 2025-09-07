@@ -100,23 +100,6 @@ litellm_settings:
   request_timeout: 300       # Timeout in seconds
   json_logs: true            # JSON formatted logs
   # No fallbacks configured per user request
-  
-  # MCP Aliases for easier access
-  mcp_aliases:
-    "fs": "filesystem"
-    "logs": "monitoring"
-
-  # MCP Server Configuration (via sparfenyuk/mcp-proxy SSE bridge)
-  mcp_servers:
-    filesystem:
-      transport: "sse"
-      url: "http://mcp-proxy-sse:8080/servers/filesystem/sse"
-      description: "File system operations for workspace and projects"
-      
-    monitoring:
-      transport: "sse"
-      url: "http://mcp-proxy-sse:8080/servers/monitoring/sse"
-      description: "System monitoring, logs, and metrics"
 
 router_settings:
   routing_strategy: "simple-shuffle"  # Changed from least-busy to simple-shuffle

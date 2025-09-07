@@ -29,13 +29,17 @@ docker rm ${PROJECT_NAME} 2>/dev/null || true
 echo "Pulling latest LiteLLM database image..."
 docker pull ghcr.io/berriai/litellm-database:main-stable
 
-# Deploy LiteLLM with database
+# Deploy LiteLLM with database and MCP support
 docker run -d \
   --name ${PROJECT_NAME} \
   --restart unless-stopped \
   --network traefik-proxy \
   --env-file /home/administrator/secrets/${PROJECT_NAME}.env \
   -v ${SCRIPT_DIR}/config.yaml:/app/config.yaml:ro \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /home/administrator/projects:/home/administrator/projects:ro \
+  -v /workspace:/workspace \
+  --add-host=host.docker.internal:host-gateway \
   --label "traefik.enable=true" \
   --label "traefik.docker.network=traefik-proxy" \
   --label "traefik.http.routers.${PROJECT_NAME}.rule=Host(\`${PROJECT_NAME}.ai-servicers.com\`)" \
