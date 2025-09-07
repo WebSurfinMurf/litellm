@@ -1,0 +1,138 @@
+# MCP Tools as OpenAI Functions for LiteLLM
+# This configuration maps MCP tools to OpenAI-compatible function definitions
+
+functions:
+  # Filesystem Functions (Admin Only)
+  - name: list_directory
+    description: List files and directories in a specified path (Admin only)
+    parameters:
+      type: object
+      properties:
+        path:
+          type: string
+          description: Directory path to list
+      required: ["path"]
+    mcp_server: filesystem
+    mcp_tool: list_allowed_directories
+    admin_only: true
+
+  - name: read_file
+    description: Read the contents of a file (Admin only)
+    parameters:
+      type: object
+      properties:
+        path:
+          type: string
+          description: File path to read
+      required: ["path"]
+    mcp_server: filesystem
+    mcp_tool: read_file
+    admin_only: true
+
+  # PostgreSQL Functions (All Users)
+  - name: list_databases
+    description: List all PostgreSQL databases
+    parameters:
+      type: object
+      properties: {}
+      required: []
+    mcp_server: postgres
+    mcp_tool: list_schemas
+    admin_only: false
+
+  - name: execute_sql
+    description: Execute a PostgreSQL SQL query
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+          description: SQL query to execute
+        database:
+          type: string
+          description: Database name (optional, defaults to postgres)
+      required: ["query"]
+    mcp_server: postgres
+    mcp_tool: execute_sql
+    admin_only: false
+
+  # Fetch Functions (All Users)
+  - name: fetch_url
+    description: Fetch and convert a webpage to markdown
+    parameters:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL to fetch
+      required: ["url"]
+    mcp_server: fetch
+    mcp_tool: fetch
+    admin_only: false
+
+  # Monitoring Functions (All Users)
+  - name: get_container_logs
+    description: Get recent logs from a Docker container
+    parameters:
+      type: object
+      properties:
+        container:
+          type: string
+          description: Container name or ID
+        lines:
+          type: integer
+          description: Number of log lines to retrieve
+          default: 50
+      required: ["container"]
+    mcp_server: monitoring
+    mcp_tool: get_container_logs
+    admin_only: false
+
+  - name: search_logs
+    description: Search logs for a specific pattern
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+          description: Search query
+        service:
+          type: string
+          description: Service name (optional)
+      required: ["query"]
+    mcp_server: monitoring
+    mcp_tool: search_logs
+    admin_only: false
+
+  # N8n Functions (All Users)
+  - name: list_workflows
+    description: List all n8n workflows
+    parameters:
+      type: object
+      properties: {}
+      required: []
+    mcp_server: n8n
+    mcp_tool: list_workflows
+    admin_only: false
+
+  # Playwright Functions (All Users)
+  - name: check_browser_health
+    description: Check if browser automation service is healthy
+    parameters:
+      type: object
+      properties: {}
+      required: []
+    mcp_server: playwright
+    mcp_tool: check_service_health
+    admin_only: false
+
+  # TimescaleDB Functions (All Users)
+  - name: show_hypertables
+    description: List all TimescaleDB hypertables
+    parameters:
+      type: object
+      properties: {}
+      required: []
+    mcp_server: timescaledb
+    mcp_tool: tsdb_show_hypertables
+    admin_only: false

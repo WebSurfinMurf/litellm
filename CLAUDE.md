@@ -2,11 +2,12 @@
 
 ## Overview
 - Purpose: Unified LLM API Gateway for Claude, ChatGPT, and Gemini (100+ providers supported)
-- URL: https://litellm.ai-servicers.com
+- URL: https://litellm.ai-servicers.com/ui/ (requires trailing slash)
 - Repository: /home/administrator/projects/litellm
 - Created: 2025-01-11
-- Updated: 2025-01-11
-- Models Configured: 19 (7 GPT, 4 Claude, 8 Gemini)
+- Updated: 2025-09-07
+- Models Configured: 17 active (7 GPT, 4 Claude, 6 Gemini)
+- Status: ✅ Running with MCP middleware for tool execution
 
 ## Configuration
 - Keycloak Client: litellm (pending full SSO integration)
@@ -124,6 +125,54 @@ cd /home/administrator/projects/litellm
 - postgres-net: Database access
 - redis-net: Caching layer
 - keycloak-net: Future SSO integration
+
+## MCP Middleware Integration (2025-09-07) ✅ FIXED
+
+### Architecture
+```
+Open WebUI → MCP Middleware (4001) → LiteLLM (4000) → AI Models
+                    ↓
+            Executes MCP Tools → MinIO Storage
+```
+
+### Middleware Service
+- **Location**: `/home/administrator/projects/litellm/middleware/`
+- **Container**: mcp-middleware
+- **Port**: 4001
+- **Network**: litellm-net
+- **Purpose**: Intercepts and executes MCP tool calls from models
+
+### Current Status
+- ✅ Middleware deployed and running
+- ✅ Models detected by Open WebUI (19 models)
+- ✅ Basic chat functionality working
+- ✅ Tool detection and execution working
+- ✅ Auto-injection of tools when missing from request
+- ✅ 23 MCP tools available (mock implementations)
+
+### Available MCP Tools (23 Total)
+
+#### Categories:
+1. **Database** (2): list_databases, execute_sql
+2. **Monitoring** (3): get_container_logs, search_logs, get_system_metrics
+3. **System** (2): list_directory, manage_docker
+4. **Network** (1): fetch_url
+5. **Automation** (3): list_workflows, execute_workflow, get_workflow_executions
+6. **TimeSeries** (3): query_timeseries, list_hypertables, get_timeseries_stats
+7. **Browser** (3): browser_navigate, browser_screenshot, browser_extract
+8. **Storage** (5): minio_list_objects, minio_upload_object, minio_download_object, minio_delete_object, minio_get_url
+9. **Meta** (1): list_mcp_tools
+
+### Key Fixes Applied
+1. **Tool Auto-Injection**: Automatically adds MCP tools to requests missing them
+2. **Streaming Prevention**: Forces `stream=false` for compatibility
+3. **Defensive Error Handling**: Safely processes malformed responses
+4. **Enhanced Logging**: Diagnostic logging for debugging
+
+### MinIO Integration
+- Screenshots and files saved to MinIO bucket `mcp-storage`
+- Files require Keycloak authentication to access
+- AI generates presigned URLs for sharing (24-hour expiry)
 
 ## MCP Integration Status (2025-09-06)
 

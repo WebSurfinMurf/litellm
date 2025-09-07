@@ -53,6 +53,7 @@ docker run -d \
 echo "Connecting to required networks..."
 docker network connect postgres-net ${PROJECT_NAME} 2>/dev/null || true
 docker network connect redis-net ${PROJECT_NAME} 2>/dev/null || true
+docker network connect litellm-net ${PROJECT_NAME} 2>/dev/null || true
 
 # Wait and verify
 sleep 10

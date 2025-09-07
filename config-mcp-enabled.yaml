@@ -1,0 +1,191 @@
+# LiteLLM Configuration with MCP Tools Integration
+# This config properly exposes MCP services as OpenAI-compatible functions
+
+model_list:
+  # GPT Models with MCP Integration
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+      # Custom callback for MCP integration
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gpt-5
+    litellm_params:
+      model: gpt-5
+      api_key: os.environ/OPENAI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gpt-5-mini
+    litellm_params:
+      model: gpt-5-mini
+      api_key: os.environ/OPENAI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gpt-5-nano
+    litellm_params:
+      model: gpt-5-nano
+      api_key: os.environ/OPENAI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gpt-5-chat-latest
+    litellm_params:
+      model: gpt-5-chat-latest
+      api_key: os.environ/OPENAI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gpt-4.1
+    litellm_params:
+      model: gpt-4.1
+      api_key: os.environ/OPENAI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gpt-4o
+    litellm_params:
+      model: gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      callbacks: ["mcp_handler"]
+
+  # Anthropic Claude Models with MCP
+  - model_name: claude-opus-4.1
+    litellm_params:
+      model: anthropic/claude-opus-4-1
+      api_key: os.environ/ANTHROPIC_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: claude-opus-4
+    litellm_params:
+      model: anthropic/claude-opus-4-0
+      api_key: os.environ/ANTHROPIC_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: claude-thinking
+    litellm_params:
+      model: anthropic/claude-opus-4-1
+      api_key: os.environ/ANTHROPIC_API_KEY
+      thinking: {"type": "enabled", "budget_tokens": 4096}
+      max_tokens: 8192
+      merge_reasoning_content_in_choices: true
+      callbacks: ["mcp_handler"]
+      
+  - model_name: claude-sonnet-4
+    litellm_params:
+      model: anthropic/claude-3-5-sonnet-20241022
+      api_key: os.environ/ANTHROPIC_API_KEY
+      callbacks: ["mcp_handler"]
+
+  # Google Gemini Models with MCP
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: gemini/gemini-2.5-pro
+      api_key: os.environ/GEMINI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gemini-2.5-flash
+    litellm_params:
+      model: gemini/gemini-2.5-flash
+      api_key: os.environ/GEMINI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gemini-2.5-flash-lite
+    litellm_params:
+      model: gemini/gemini-2.5-flash-lite
+      api_key: os.environ/GEMINI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gemini-2.5-flash-image-preview
+    litellm_params:
+      model: gemini/gemini-2.5-flash-image-preview
+      api_key: os.environ/GEMINI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gemini-2.5-flash-preview-tts
+    litellm_params:
+      model: gemini/gemini-2.5-flash-preview-tts
+      api_key: os.environ/GEMINI_API_KEY
+      callbacks: ["mcp_handler"]
+      
+  - model_name: gemini-2.5-pro-preview-tts
+    litellm_params:
+      model: gemini/gemini-2.5-pro-preview-tts
+      api_key: os.environ/GEMINI_API_KEY
+      callbacks: ["mcp_handler"]
+
+litellm_settings:
+  drop_params: false  # Keep function parameters
+  num_retries: 3
+  request_timeout: 300
+  json_logs: true
+  telemetry: false
+  
+  # Custom settings for MCP integration
+  custom_callback_class: "mcp_middleware.MCPMiddleware"
+  callbacks: ["mcp_handler"]
+  
+  # MCP Server Configuration (via Docker network)
+  mcp_config:
+    base_url: "http://mcp-proxy-sse:8080"
+    admin_keys:
+      - "sk-pFgey4HPR9qDvyT-N_7yVQ"
+    developer_keys:
+      - "sk-nzq2BIYVoVUpz5csqr69xA"
+    
+    # MCP servers available
+    servers:
+      filesystem:
+        url: "http://mcp-proxy-sse:8080/servers/filesystem/sse"
+        description: "File system operations - Administrator access only"
+        admin_only: true
+        
+      postgres:
+        url: "http://mcp-proxy-sse:8080/servers/postgres/sse"
+        description: "PostgreSQL database operations"
+        admin_only: false
+        
+      fetch:
+        url: "http://mcp-proxy-sse:8080/servers/fetch/sse"
+        description: "Web content fetching"
+        admin_only: false
+        
+      monitoring:
+        url: "http://mcp-proxy-sse:8080/servers/monitoring/sse"
+        description: "System logs and metrics"
+        admin_only: false
+        
+      n8n:
+        url: "http://mcp-proxy-sse:8080/servers/n8n/sse"
+        description: "Workflow automation"
+        admin_only: false
+        
+      playwright:
+        url: "http://mcp-proxy-sse:8080/servers/playwright/sse"
+        description: "Browser automation"
+        admin_only: false
+        
+      timescaledb:
+        url: "http://mcp-proxy-sse:8080/servers/timescaledb/sse"
+        description: "Time-series database operations"
+        admin_only: false
+    
+    # Function mappings
+    functions_config: "/app/mcp-functions.yaml"
+
+router_settings:
+  routing_strategy: "simple-shuffle"
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+  database_type: "postgres"
+  database_connection_pool_limit: 10
+  
+  # Admin UI settings
+  ui_username: os.environ/UI_USERNAME
+  ui_password: os.environ/UI_PASSWORD
+  ui_access_mode: "admin"
+  
+  # CORS settings for web access
+  cors_allowed_origins: ["https://litellm.ai-servicers.com", "https://open-webui.ai-servicers.com"]
+  
+  # Logging level
+  log_level: "INFO"

@@ -1,0 +1,178 @@
+# LiteLLM Configuration with Role-Based MCP Access
+# Version: 2.0
+# Updated: 2025-09-07
+# Keycloak Integration Enabled
+
+# Model Definitions (Available to all authenticated users)
+model_list:
+  # --- OpenAI Models ---
+  - model_name: gpt-5
+    litellm_params:
+      model: gpt-5
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-5-mini
+    litellm_params:
+      model: gpt-5-mini
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-5-nano
+    litellm_params:
+      model: gpt-5-nano
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-5-chat-latest
+    litellm_params:
+      model: gpt-5-chat-latest
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-4.1
+    litellm_params:
+      model: gpt-4.1
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-4o
+    litellm_params:
+      model: gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+
+  # --- Anthropic Claude Models ---
+  - model_name: claude-opus-4.1
+    litellm_params:
+      model: anthropic/claude-opus-4-1
+      api_key: os.environ/ANTHROPIC_API_KEY
+      
+  - model_name: claude-opus-4
+    litellm_params:
+      model: anthropic/claude-opus-4-0
+      api_key: os.environ/ANTHROPIC_API_KEY
+      
+  - model_name: claude-thinking
+    litellm_params:
+      model: anthropic/claude-opus-4-1
+      thinking:
+        type: enabled
+        budget_tokens: 4096
+      max_tokens: 8192
+      merge_reasoning_content_in_choices: true
+      api_key: os.environ/ANTHROPIC_API_KEY
+      
+  - model_name: claude-sonnet-4
+    litellm_params:
+      model: anthropic/claude-3-5-sonnet-20241022
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  # --- Google Gemini Models ---
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: gemini/gemini-2.5-pro
+      api_key: os.environ/GEMINI_API_KEY
+      
+  - model_name: gemini-2.5-flash
+    litellm_params:
+      model: gemini/gemini-2.5-flash
+      api_key: os.environ/GEMINI_API_KEY
+      
+  - model_name: gemini-2.5-flash-lite
+    litellm_params:
+      model: gemini/gemini-2.5-flash-lite
+      api_key: os.environ/GEMINI_API_KEY
+      
+  - model_name: gemini-2.5-flash-image-preview
+    litellm_params:
+      model: gemini/gemini-2.5-flash-image-preview
+      api_key: os.environ/GEMINI_API_KEY
+      
+  - model_name: gemini-2.5-flash-preview-tts
+    litellm_params:
+      model: gemini/gemini-2.5-flash-preview-tts
+      api_key: os.environ/GEMINI_API_KEY
+      
+  - model_name: gemini-2.5-pro-preview-tts
+    litellm_params:
+      model: gemini/gemini-2.5-pro-preview-tts
+      api_key: os.environ/GEMINI_API_KEY
+      
+  - model_name: gemini-1.5-pro
+    litellm_params:
+      model: gemini/gemini-1.5-pro
+      api_key: os.environ/GEMINI_API_KEY
+      
+  - model_name: gemini-1.5-flash
+    litellm_params:
+      model: gemini/gemini-1.5-flash
+      api_key: os.environ/GEMINI_API_KEY
+
+# General Settings
+litellm_settings:
+  drop_params: true
+  num_retries: 3
+  request_timeout: 300
+  
+  # Master key for admin access
+  master_key: os.environ/LITELLM_MASTER_KEY
+  
+  # Database configuration
+  database_url: os.environ/DATABASE_URL
+  database_type: postgres
+  
+  # Keycloak OIDC Integration
+  auth_type: oidc
+  oidc_issuer: https://keycloak.ai-servicers.com/realms/master
+  oidc_client_id: litellm
+  oidc_client_secret: h5mlH38VkGeqI8wbo3IJNS9DLxZlynPj
+  oidc_audience: litellm
+  
+  # Group-based access control
+  rbac_enabled: true
+  rbac_group_claim: groups
+  rbac_default_group: developers
+  
+  # Audit logging
+  enable_audit_logs: true
+  audit_log_path: /app/logs/audit.log
+
+# Router settings
+router_settings:
+  routing_strategy: least-busy
+  model_group_alias:
+    gpt-5: ["gpt-5", "gpt-5-chat-latest"]
+    claude-opus: ["claude-opus-4.1", "claude-opus-4"]
+    gemini-pro: ["gemini-2.5-pro", "gemini-1.5-pro"]
+    gemini-flash: ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash"]
+
+# MCP Server Access Control
+# Note: These are configured via UI but documented here for reference
+mcp_access_control:
+  # Administrator-only MCPs
+  administrators:
+    - filesystem  # Full filesystem access
+    
+  # Developer MCPs (all except filesystem)
+  developers:
+    - postgres    # Database operations
+    - fetch       # Web content fetching
+    - monitoring  # System logs (read-only)
+    - n8n         # Workflow automation
+    - playwright  # Browser automation
+    - timescaledb # Time-series database
+    
+  # Public MCPs (none - all require authentication)
+  public: []
+
+# Rate limiting per group
+rate_limits:
+  administrators:
+    requests_per_minute: 1000
+    tokens_per_minute: 500000
+  developers:
+    requests_per_minute: 100
+    tokens_per_minute: 100000
+  default:
+    requests_per_minute: 10
+    tokens_per_minute: 10000

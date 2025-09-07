@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm-database:main-stable
+    container_name: litellm
+    restart: unless-stopped
+    networks:
+      - litellm-net      # For MCP proxy access (isolated)
+      - traefik-proxy    # For HTTPS ingress
+      - postgres-net     # For database access
+      - redis-net        # For caching
+      - keycloak-net     # For SSO (future)
+    ports:
+      # No external port exposure - Traefik handles HTTPS
+      # Internal port 4000 accessible only via Docker networks
+      - "127.0.0.1:4000:4000"  # Only bind to localhost for admin access
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - litellm-data:/app/data
+    env_file:
+      - /home/administrator/secrets/litellm.env
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    environment:
+      # Override any specific environment variables here
+      - PORT=4000
+      - LITELLM_MODE=PRODUCTION
+    labels:
+      # Traefik configuration for HTTPS
+      - "traefik.enable=true"
+      - "traefik.http.routers.litellm.rule=Host(`litellm.ai-servicers.com`)"
+      - "traefik.http.routers.litellm.entrypoints=websecure"
+      - "traefik.http.routers.litellm.tls=true"
+      - "traefik.http.routers.litellm.tls.certresolver=letsencrypt"
+      - "traefik.http.services.litellm.loadbalancer.server.port=4000"
+      - "traefik.docker.network=traefik-proxy"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  litellm-data:
+    name: litellm-data
+
+networks:
+  litellm-net:
+    external: true
+  traefik-proxy:
+    external: true
+  postgres-net:
+    external: true
+  redis-net:
+    external: true
+  keycloak-net:
+    external: true

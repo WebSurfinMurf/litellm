@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mcp-middleware:
+    build: .
+    container_name: mcp-middleware
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4001:4001"
+    networks:
+      - litellm-net
+    environment:
+      - LITELLM_URL=http://litellm:4000
+      - MCP_PROXY_URL=http://mcp-proxy-sse:8080
+      - MCP_ADMIN_KEYS=sk-pFgey4HPR9qDvyT-N_7yVQ
+      - PYTHONUNBUFFERED=1
+    labels:
+      - "traefik.enable=false"  # Internal service only
+
+networks:
+  litellm-net:
+    external: true

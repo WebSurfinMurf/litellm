@@ -102,67 +102,21 @@ litellm_settings:
   # No fallbacks configured per user request
   
   # MCP Aliases for easier access
-  # MCP Server Configuration (Network Isolated via Docker)
-  # These servers are only accessible from within the litellm-net Docker network
+  mcp_aliases:
+    "fs": "filesystem"
+    "logs": "monitoring"
+
+  # MCP Server Configuration (via sparfenyuk/mcp-proxy SSE bridge)
   mcp_servers:
     filesystem:
       transport: "sse"
       url: "http://mcp-proxy-sse:8080/servers/filesystem/sse"
-      description: "File system operations - Administrator access only"
-      auth: "none"
-      version: "latest"
-      
-    postgres:
-      transport: "sse"
-      url: "http://mcp-proxy-sse:8080/servers/postgres/sse"
-      description: "PostgreSQL database operations"
-      auth: "none"
-      version: "latest"
-      
-    fetch:
-      transport: "sse"
-      url: "http://mcp-proxy-sse:8080/servers/fetch/sse"
-      description: "Web content fetching"
-      auth: "none"
-      version: "latest"
+      description: "File system operations for workspace and projects"
       
     monitoring:
       transport: "sse"
       url: "http://mcp-proxy-sse:8080/servers/monitoring/sse"
-      description: "System logs and metrics"
-      auth: "none"
-      version: "latest"
-      
-    n8n:
-      transport: "sse"
-      url: "http://mcp-proxy-sse:8080/servers/n8n/sse"
-      description: "Workflow automation"
-      auth: "none"
-      version: "latest"
-      
-    playwright:
-      transport: "sse"
-      url: "http://mcp-proxy-sse:8080/servers/playwright/sse"
-      description: "Browser automation"
-      auth: "none"
-      version: "latest"
-      
-    timescaledb:
-      transport: "sse"
-      url: "http://mcp-proxy-sse:8080/servers/timescaledb/sse"
-      description: "Time-series database operations"
-      auth: "none"
-      version: "latest"
-      
-  # MCP Aliases for convenience
-  mcp_aliases:
-    "fs": "filesystem"
-    "pg": "postgres"
-    "web": "fetch"
-    "logs": "monitoring"
-    "wf": "n8n"
-    "browser": "playwright"
-    "tsdb": "timescaledb"
+      description: "System monitoring, logs, and metrics"
 
 router_settings:
   routing_strategy: "simple-shuffle"  # Changed from least-busy to simple-shuffle

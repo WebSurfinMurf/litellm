@@ -1,0 +1,147 @@
+# LiteLLM Configuration with MCP Tool Integration
+# This configuration adds MCP tools as custom endpoints
+
+model_list:
+  # --- OpenAI Models ---
+  - model_name: gpt-5
+    litellm_params:
+      model: gpt-5
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-5-mini
+    litellm_params:
+      model: gpt-5-mini
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-4o
+    litellm_params:
+      model: gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+
+  # --- Anthropic Claude Models ---
+  - model_name: claude-opus-4.1
+    litellm_params:
+      model: anthropic/claude-opus-4-1
+      api_key: os.environ/ANTHROPIC_API_KEY
+      
+  - model_name: claude-sonnet-4
+    litellm_params:
+      model: anthropic/claude-3-5-sonnet-20241022
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  # --- Google Gemini Models ---
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: gemini/gemini-2.5-pro
+      api_key: os.environ/GEMINI_API_KEY
+      
+  - model_name: gemini-2.5-flash
+    litellm_params:
+      model: gemini/gemini-2.5-flash
+      api_key: os.environ/GEMINI_API_KEY
+
+  # --- MCP Tool-Enabled Model ---
+  # This is a special configuration that uses a primary model with MCP tools
+  - model_name: gpt-4o-with-mcp
+    litellm_params:
+      model: gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      # Custom function calling configuration
+      tools:
+        - type: function
+          function:
+            name: mcp_filesystem_read
+            description: Read file contents from the filesystem
+            parameters:
+              type: object
+              properties:
+                path:
+                  type: string
+                  description: The file path to read
+              required: ["path"]
+        
+        - type: function
+          function:
+            name: mcp_postgres_query
+            description: Execute a PostgreSQL query
+            parameters:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: The SQL query to execute
+              required: ["query"]
+        
+        - type: function
+          function:
+            name: mcp_fetch_url
+            description: Fetch content from a URL
+            parameters:
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: The URL to fetch
+              required: ["url"]
+        
+        - type: function
+          function:
+            name: mcp_monitoring_logs
+            description: Search system logs
+            parameters:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: LogQL query for searching logs
+                hours:
+                  type: integer
+                  description: Number of hours to look back
+              required: ["query"]
+
+litellm_settings:
+  drop_params: true
+  num_retries: 3
+  request_timeout: 300
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
+  
+  # Database configuration
+  database_url: os.environ/DATABASE_URL
+  store_model_in_db: true
+  
+  # Caching
+  cache: true
+  cache_params:
+    type: "redis"
+    host: "redis"
+    port: 6379
+    ttl: 3600
+  
+  # Router settings
+  router_settings:
+    routing_strategy: "least-busy"
+    model_group_alias: {
+      "gpt-5": ["gpt-5", "gpt-5-mini", "gpt-5-nano"],
+      "claude": ["claude-opus-4.1", "claude-sonnet-4"],
+      "gemini": ["gemini-2.5-pro", "gemini-2.5-flash"]
+    }
+    
+  # Function calling proxy
+  # This would route function calls to the MCP adapter
+  function_proxy:
+    enabled: true
+    endpoint: "http://mcp-litellm-adapter:3333/v1/functions"
+    timeout: 30
+
+# General settings
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+  otel: true
+  custom_auth: true

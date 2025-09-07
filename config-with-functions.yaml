@@ -1,0 +1,203 @@
+# LiteLLM Configuration with MCP Tools as Functions
+# This config exposes MCP services as OpenAI-compatible function calls
+
+model_list:
+  # GPT Models with MCP tools
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+      # Enable function calling for this model
+      functions:
+        - name: filesystem_list_directory
+          description: List files in a directory (Admin only)
+          parameters:
+            type: object
+            properties:
+              path:
+                type: string
+                description: Directory path to list
+            required: ["path"]
+          
+        - name: filesystem_read_file
+          description: Read contents of a file (Admin only)
+          parameters:
+            type: object
+            properties:
+              path:
+                type: string
+                description: File path to read
+            required: ["path"]
+        
+        - name: postgres_query
+          description: Execute a PostgreSQL query
+          parameters:
+            type: object
+            properties:
+              query:
+                type: string
+                description: SQL query to execute
+            required: ["query"]
+        
+        - name: fetch_webpage
+          description: Fetch and convert webpage to markdown
+          parameters:
+            type: object
+            properties:
+              url:
+                type: string
+                description: URL to fetch
+            required: ["url"]
+        
+        - name: monitoring_get_logs
+          description: Get recent logs from a service
+          parameters:
+            type: object
+            properties:
+              service:
+                type: string
+                description: Service name
+              lines:
+                type: integer
+                description: Number of lines to retrieve
+                default: 50
+            required: ["service"]
+
+  - model_name: gpt-5
+    litellm_params:
+      model: gpt-5
+      api_key: os.environ/OPENAI_API_KEY
+      # Same functions available
+      functions:
+        - name: filesystem_list_directory
+          description: List files in a directory (Admin only)
+          parameters:
+            type: object
+            properties:
+              path:
+                type: string
+                description: Directory path to list
+            required: ["path"]
+        
+        - name: postgres_query
+          description: Execute a PostgreSQL query
+          parameters:
+            type: object
+            properties:
+              query:
+                type: string
+                description: SQL query to execute
+            required: ["query"]
+
+  - model_name: claude-opus-4.1
+    litellm_params:
+      model: anthropic/claude-opus-4-1
+      api_key: os.environ/ANTHROPIC_API_KEY
+      # Claude also supports function calling
+      functions:
+        - name: filesystem_list_directory
+          description: List files in a directory (Admin only)
+          parameters:
+            type: object
+            properties:
+              path:
+                type: string
+                description: Directory path to list
+            required: ["path"]
+        
+        - name: postgres_query
+          description: Execute a PostgreSQL query
+          parameters:
+            type: object
+            properties:
+              query:
+                type: string
+                description: SQL query to execute
+            required: ["query"]
+
+litellm_settings:
+  drop_params: false  # Don't drop function parameters
+  num_retries: 3
+  request_timeout: 300
+  
+  # Function calling configuration
+  enable_function_calling: true
+  
+  # MCP Server Configuration
+  mcp_servers:
+    filesystem:
+      transport: "sse"
+      url: "http://mcp-proxy-sse:8080/servers/filesystem/sse"
+      description: "File system operations - Administrator access only"
+      auth: "none"
+      version: "latest"
+      # Map to function names
+      functions:
+        - filesystem_list_directory
+        - filesystem_read_file
+        - filesystem_write_file
+      
+    postgres:
+      transport: "sse"
+      url: "http://mcp-proxy-sse:8080/servers/postgres/sse"
+      description: "PostgreSQL database operations"
+      auth: "none"
+      version: "latest"
+      functions:
+        - postgres_query
+        - postgres_list_databases
+        - postgres_list_tables
+      
+    fetch:
+      transport: "sse"
+      url: "http://mcp-proxy-sse:8080/servers/fetch/sse"
+      description: "Web content fetching"
+      auth: "none"
+      version: "latest"
+      functions:
+        - fetch_webpage
+      
+    monitoring:
+      transport: "sse"
+      url: "http://mcp-proxy-sse:8080/servers/monitoring/sse"
+      description: "System logs and metrics"
+      auth: "none"
+      version: "latest"
+      functions:
+        - monitoring_get_logs
+        - monitoring_get_metrics
+  
+  # Function execution handlers
+  function_handlers:
+    filesystem_list_directory:
+      mcp_server: filesystem
+      mcp_tool: list_directory
+      admin_only: true
+    
+    filesystem_read_file:
+      mcp_server: filesystem
+      mcp_tool: read_file
+      admin_only: true
+    
+    postgres_query:
+      mcp_server: postgres
+      mcp_tool: execute_sql
+      admin_only: false
+    
+    fetch_webpage:
+      mcp_server: fetch
+      mcp_tool: fetch
+      admin_only: false
+    
+    monitoring_get_logs:
+      mcp_server: monitoring
+      mcp_tool: get_container_logs
+      admin_only: false
+
+router_settings:
+  routing_strategy: "simple-shuffle"
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+  database_type: "postgres"
