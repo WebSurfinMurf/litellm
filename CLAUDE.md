@@ -174,83 +174,122 @@ Open WebUI → MCP Middleware (4001) → LiteLLM (4000) → AI Models
 - Files require Keycloak authentication to access
 - AI generates presigned URLs for sharing (24-hour expiry)
 
-## MCP Integration Status (2025-09-06)
+## Unified MCP Registry Status (2025-09-08) ✅
 
-### Configuration Added
-- Added 9 MCP servers to config.yaml (filesystem, memory, fetch, monitoring, github, postgres, n8n, playwright, timescaledb)
-- Added MCP aliases for easier access (fs, mem, web, logs, gh, pg, wf, browser, tsdb)
-- Updated environment variables in litellm.env with required passwords
-- Modified deploy.sh to mount necessary volumes and Docker socket
-
-### Current MCP Servers (All STDIO-based)
-
-**Docker Containers (3):**
-1. **mcp-filesystem** - Docker container for file operations
-2. **mcp-fetch** - Docker container for web fetching
-3. **mcp-postgres** - Docker container for PostgreSQL operations
-
-**Node.js Applications (5):**
-4. **mcp-memory-postgres** - Node.js app for memory storage
-5. **mcp-monitoring** - Node.js app for Loki/Netdata monitoring
-6. **mcp-n8n** - Shell wrapper → Node.js for workflow automation
-7. **mcp-playwright** - Node.js app for browser automation
-8. **mcp-timescaledb** - Node.js app for time-series DB
-
-**NPM Package (1):**
-9. **mcp-github** - NPM package via npx
-
-### Current Limitations
-- **Docker-in-Docker Required**: LiteLLM container can't run Docker commands (3 MCPs need it)
-- **Node.js Missing**: LiteLLM container doesn't have Node.js installed (5 MCPs need it)
-- **NPX Missing**: LiteLLM container doesn't have npx (1 MCP needs it)
-- **Connection Errors**: All MCP client connections failing with "No such file or directory"
-
-### Industry Best Practices (2025)
-Based on research, the top 3 approaches used in production:
-
-1. **HTTP/SSE Gateway Pattern** (Most Popular)
-   - Convert MCP servers to HTTP/SSE endpoints
-   - Examples: Zapier, DeepWiki use HTTPS endpoints
-   - No runtime dependencies in LiteLLM container
-
-2. **Docker MCP Catalog** (Docker's Solution)
-   - Use Docker's official MCP Catalog (100+ servers)
-   - Each MCP runs in separate container
-   - Managed through Docker Desktop MCP Toolkit
-
-3. **Custom LiteLLM Image** (DIY Approach)
-   - Build custom image with Node.js: `FROM litellm:stable + RUN apk add nodejs npm`
-   - Supports all STDIO servers directly
-   - Requires maintenance of custom image
-
-### Recommended Solution
-**Option 1: HTTP Gateway Pattern** - Most aligned with cloud-native architecture
-- Create HTTP wrapper service for each MCP
-- Deploy as separate microservices
-- Configure LiteLLM to use HTTP transport instead of STDIO
-- No modifications to LiteLLM container needed
-
-### Alternative Solutions
-**Option 2: Custom LiteLLM Image**
-```dockerfile
-FROM ghcr.io/berriai/litellm:main-stable
-RUN apk add --no-cache nodejs npm docker-cli
-COPY package.json .
-RUN npm install
+### Architecture: Unified Tool Registry
+```
+┌─────────────────────────────────────────┐
+│         Unified MCP Registry             │
+│     24 tools from 7 MCP services        │
+└─────────────┬───────────┬────────────────┘
+              │           │
+     ┌────────▼───────┐  ▼─────────────┐
+     │ Claude Adapter │  │LiteLLM Adapter│
+     │  (stdio)       │  │  (HTTP - TODO) │
+     └────────┬───────┘  └──────────────┘
+              │
+     ┌────────▼───────────────────┐
+     │   MCP Services (7 Active)    │
+     │ • filesystem (4 tools)       │
+     │ • postgres (2 tools)         │
+     │ • github (3 tools)           │
+     │ • monitoring (5 tools)       │
+     │ • n8n (3 tools)              │
+     │ • playwright (4 tools)       │
+     │ • timescaledb (3 tools)      │
+     └──────────────────────────────┘
 ```
 
-**Option 3: Sidecar Pattern**
-- Run MCP servers as separate containers
-- Use shared volume for communication
-- Network them together in docker-compose
+### Deployed Services in Unified Registry
 
-### Next Steps
-1. Choose approach (recommend HTTP Gateway)
-2. Implement solution for one MCP as proof of concept
-3. Test MCP tool calling through LiteLLM API
-4. Roll out to all 9 MCP servers
-5. Configure Claude Code to use LiteLLM backend
-6. Production deployment with monitoring
+**Total: 24 tools from 7 services**
+
+1. **filesystem** (4 tools) - File operations via Docker
+   - `filesystem_read_file`
+   - `filesystem_list_directory`
+   - `filesystem_write_file`
+   - `filesystem_create_directory`
+
+2. **postgres** (2 tools) - PostgreSQL operations via Docker
+   - `postgres_list_databases`
+   - `postgres_execute_sql`
+
+3. **github** (3 tools) - GitHub API via npx
+   - `github_search_repositories`
+   - `github_get_repository`
+   - `github_create_issue`
+
+4. **monitoring** (5 tools) - Loki/Netdata via Node.js
+   - `monitoring_search_logs`
+   - `monitoring_get_recent_errors`
+   - `monitoring_get_container_logs`
+   - `monitoring_get_system_metrics`
+   - `monitoring_check_service_health`
+
+5. **n8n** (3 tools) - Workflow automation via wrapper
+   - `n8n_list_workflows`
+   - `n8n_get_workflow`
+   - `n8n_execute_workflow`
+
+6. **playwright** (4 tools) - Browser automation via Node.js
+   - `playwright_navigate`
+   - `playwright_screenshot`
+   - `playwright_click`
+   - `playwright_fill`
+
+7. **timescaledb** (3 tools) - Time-series DB via Docker
+   - `timescaledb_list_hypertables`
+   - `timescaledb_query_timeseries`
+   - `timescaledb_create_hypertable`
+
+### Services NOT Deployed (Skipped)
+
+1. **fetch** - Skipped (functionality covered by WebFetch in Claude Code)
+2. **memory** - Skipped (broken - onnxruntime-node dependency issues)
+3. **docker-hub** - Skipped (never worked, authentication issues)
+
+### Integration Points
+
+**Claude Code Access:**
+- Location: `/home/administrator/projects/mcp/unified-registry/`
+- Command: `run_claude_adapter.sh`
+- Config: Add to `~/.config/claude/mcp_servers.json` as "unified-tools"
+
+**LiteLLM Integration (TODO):**
+- Need to create HTTP/SSE adapter for LiteLLM middleware
+- Will replace mock tools with real MCP execution
+- Target: Port 4001 (MCP middleware)
+
+### Testing Commands
+
+```bash
+# List all available tools
+echo '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}},"id":1}
+{"jsonrpc":"2.0","method":"tools/list","params":{},"id":2}' | \
+python3 /home/administrator/projects/mcp/unified-registry/claude_adapter.py 2>/dev/null | \
+jq -r '.result.tools[].name'
+
+# Count tools by service
+python3 -c "from tool_definitions import TOOL_DEFINITIONS; \
+[print(f'{s}: {len(sd[\"tools\"])} tools') for s, sd in TOOL_DEFINITIONS.items()]"
+```
+
+### Key Benefits of Unified Registry
+
+1. **Single Source of Truth** - One place to define all MCP tools
+2. **No Duplication** - Tools defined once, used everywhere
+3. **Consistent Naming** - `service_tool` format prevents conflicts
+4. **Easy Maintenance** - Update tool definitions in one file
+5. **Platform Agnostic** - Works with both stdio (Claude) and HTTP (LiteLLM)
+
+### Next Steps for Full Integration
+
+1. ✅ Unified registry with 7 MCP services (24 tools)
+2. ✅ Claude Code adapter working
+3. ⏳ Create LiteLLM HTTP adapter
+4. ⏳ Connect to MCP middleware at port 4001
+5. ⏳ Replace mock tools with real execution
+6. ⏳ Test end-to-end with Open WebUI
 
 ## Documentation
 - Official Docs: https://docs.litellm.ai/
