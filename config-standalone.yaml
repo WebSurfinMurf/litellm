@@ -1,0 +1,49 @@
+# LiteLLM Configuration (Standalone Test with MCP)
+
+model_list:
+  - model_name: gpt-4o
+    litellm_params:
+      model: gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+
+litellm_settings:
+  drop_params: true
+  num_retries: 1
+  request_timeout: 120
+  json_logs: true
+  mcp_aliases:
+    mcp-postgres: mcp_postgres
+    postgres: mcp_postgres
+    mcp-filesystem: mcp_filesystem
+    filesystem: mcp_filesystem
+
+router_settings:
+  routing_strategy: "simple-shuffle"
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+  database_type: "postgres"
+  ui_username: os.environ/UI_USERNAME
+  ui_password: os.environ/UI_PASSWORD
+  ui_access_mode: "admin"
+  log_level: "DEBUG"
+  telemetry: false
+
+mcp_servers:
+  mcp_postgres:
+    transport: "stdio"
+    command: "postgres-mcp"
+    env:
+      POSTGRES_CONNECTION_STRING: ${POSTGRES_MCP_URL}
+    description: "PostgreSQL administrative tools (HenkDz implementation)"
+
+  mcp_filesystem:
+    transport: "stdio"
+    command: "mcp-server-filesystem"
+    args:
+      - "/workspace/projects"
+      - "/workspace/mcp-scratch"
+    env:
+      ALLOWED_PATHS: ${FILESYSTEM_ALLOWED_PATHS}
+    description: "Filesystem access with restricted paths"

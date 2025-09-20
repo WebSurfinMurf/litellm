@@ -1,0 +1,26 @@
+[info] HTTP probe (port 80)
+[command]
+curl -v --resolve litellm.linuxserver.lan:80:192.168.1.13 http://litellm.linuxserver.lan
+
+[output]
+* Added litellm.linuxserver.lan:80:192.168.1.13 to DNS cache
+* Hostname litellm.linuxserver.lan was found in DNS cache
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 192.168.1.13:80...
+* Connected to litellm.linuxserver.lan (192.168.1.13) port 80
+> GET / HTTP/1.1
+> Host: litellm.linuxserver.lan
+> User-Agent: curl/8.5.0
+> Accept: */*
+> 
+< HTTP/1.1 404 Not Found
+< Content-Type: text/plain; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Date: Fri, 19 Sep 2025 11:12:30 GMT
+< Content-Length: 19
+< 
+{ [19 bytes data]
+100    19  100    19    0     0  18482      0 --:--:-- --:--:-- --:--:-- 19000
+* Connection #0 to host litellm.linuxserver.lan left intact
+404 page not found

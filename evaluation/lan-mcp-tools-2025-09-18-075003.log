@@ -1,0 +1,16 @@
+[info] Writing SSE stream to /home/administrator/projects/litellm/evaluation/lan-mcp-tools-2025-09-18-075003.log
+
+[command]
+curl -sS -N -H Authorization: Bearer <redacted> -H x-mcp-servers: mcp_postgres,mcp_filesystem -H Accept: text/event-stream http://litellm.linuxserver.lan/mcp/tools
+
+[output]
+: ping - 2025-09-18 11:50:18.954975+00:00
+
+: ping - 2025-09-18 11:50:33.955117+00:00
+
+: ping - 2025-09-18 11:50:48.955199+00:00
+
+: ping - 2025-09-18 11:51:03.955372+00:00
+
+: ping - 2025-09-18 11:51:18.954950+00:00
+

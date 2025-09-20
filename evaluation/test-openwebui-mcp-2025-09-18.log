@@ -1,0 +1,50 @@
+=== Testing MCP Tools via Open WebUI Backend ===
+
+This test verifies that MCP tools work when called through Open WebUI
+
+==== Testing with Admin Key ====
+
+[1;33mTest: Admin accessing filesystem (should work)[0m
+Model: gpt-4o-mini
+Prompt: List the files in the /home/administrator/projects directory
+Result: [0;31m✗ Error or no response[0m
+
+[1;33mTest: Admin accessing PostgreSQL (should work)[0m
+Model: gpt-4o-mini
+Prompt: List all PostgreSQL databases
+Result: [0;31m✗ Error or no response[0m
+
+[1;33mTest: Admin accessing monitoring (should work)[0m
+Model: gpt-4o-mini
+Prompt: Get the last 5 log lines from the litellm container
+Result: [0;31m✗ Error or no response[0m
+
+==== Testing with Developer Key ====
+
+[1;33mTest: Developer accessing filesystem (should fail)[0m
+Model: gpt-4o-mini
+Prompt: List the files in the /home/administrator/projects directory
+Result: [0;31m✗ Error or no response[0m
+
+[1;33mTest: Developer accessing PostgreSQL (should work)[0m
+Model: gpt-4o-mini
+Prompt: List all PostgreSQL databases
+Result: [0;31m✗ Error or no response[0m
+
+[1;33mTest: Developer accessing monitoring (should work)[0m
+Model: gpt-4o-mini
+Prompt: Get the last 5 log lines from the litellm container
+Result: [0;31m✗ Error or no response[0m
+
+=== Test Complete ===
+
+To test in Open WebUI:
+1. Go to https://open-webui.ai-servicers.com
+2. Select a model (e.g., gpt-4o-mini)
+3. Try these prompts:
+   - 'List files in /home/administrator/projects'
+   - 'Show me all PostgreSQL databases'
+   - 'Get recent logs from the litellm container'
+
+Admin users should have access to all tools.
+Developer users should be blocked from filesystem access.

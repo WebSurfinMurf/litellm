@@ -1,0 +1,6 @@
+[info] Capturing 10s of /mcp/tools stream from litellm.linuxserver.lan (IP override: 192.168.1.13)
+
+[command]
+timeout 10 curl -sS -N -H Authorization: Bearer sk-e0b742bc6575adf26c7d356c49c78d8fd08119fcde1d6e188d753999b5f956fc -H x-mcp-servers: mcp_postgres,mcp_filesystem -H Accept: text/event-stream --resolve litellm.linuxserver.lan:80:192.168.1.13 http://litellm.linuxserver.lan/mcp/tools
+
+[output]

@@ -100,15 +100,15 @@ litellm_settings:
   request_timeout: 300       # Timeout in seconds
   json_logs: true            # JSON formatted logs
   # No fallbacks configured per user request
-  
-  # MCP Server Configuration
-  mcp_servers:
-    centralized:
-      transport: "http"
-      url: "http://mcp.linuxserver.lan:8001"
-      description: "Centralized MCP server with 31 tools"
-      auth: "none"
-      version: "1.0.0"
+
+  # MCP alias mapping for friendlier tool references
+  mcp_aliases:
+    mcp-postgres: mcp_postgres
+    postgres: mcp_postgres
+    mcp-filesystem: mcp_filesystem
+    filesystem: mcp_filesystem
+    mcp-monitoring: mcp_monitoring
+    monitoring: mcp_monitoring
 
 router_settings:
   routing_strategy: "simple-shuffle"  # Changed from least-busy to simple-shuffle
@@ -132,3 +132,27 @@ general_settings:
   
   # Disable telemetry
   telemetry: false
+
+# MCP server registrations (stdio/HTTP)
+mcp_servers:
+  mcp_postgres:
+    transport: "stdio"
+    command: "postgres-mcp"
+    env:
+      POSTGRES_CONNECTION_STRING: ${POSTGRES_MCP_URL}
+    description: "PostgreSQL administrative tools (HenkDz implementation)"
+
+  mcp_filesystem:
+    transport: "stdio"
+    command: "mcp-server-filesystem"
+    args:
+      - "/workspace/projects"
+      - "/workspace/mcp-scratch"
+    env:
+      ALLOWED_PATHS: ${FILESYSTEM_ALLOWED_PATHS}
+    description: "Filesystem access with restricted paths"
+
+  mcp_monitoring:
+    transport: "http"
+    url: "http://mcp_monitoring:8080/mcp"
+    description: "Monitoring MCP (reserved for future implementation)"

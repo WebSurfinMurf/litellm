@@ -1,0 +1,6 @@
+Command: codex mcp list
+Output:
+Name     Command  Args  Env
+litellm           -     -
+
+Follow-up: no built-in `codex mcp tools` subcommand; unable to trigger tool catalog via CLI without interactive session. Need product guidance or alternate command to exercise MCP tool listing.

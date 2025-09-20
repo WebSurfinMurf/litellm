@@ -1,0 +1,7 @@
+# MCP Tool Catalog Validation (2025-09-19)
+# Captured via user-run `projects/mcp/mcpmonitor.sh` because codex sandbox cannot resolve `linuxserver.lan`.
+# Excerpt of returned tools (full stream retained in user session):
+{"jsonrpc":"2.0","id":"tools-list","result":{"tools":[
+  {"name":"postgres-pg_analyze_database","description":"Analyze PostgreSQL database configuration and performance"},
+  {"name":"postgres-pg_manage_functions","description":"Manage PostgreSQL functions - get, create, or drop functions with a single tool."}
+]}}

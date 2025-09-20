@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  litellm-standalone:
+    image: litellm-custom:latest
+    container_name: litellm-standalone
+    restart: unless-stopped
+    networks:
+      - litellm-standalone
+      - postgres-net
+    ports:
+      - "0.0.0.0:4100:4000"
+    volumes:
+      - ./config-standalone.yaml:/app/config.yaml:ro
+      - litellm-standalone-data:/app/data
+      - /home/administrator/projects:/workspace/projects:ro
+      - /home/administrator/mcp-scratch:/workspace/mcp-scratch
+    env_file:
+      - /home/administrator/secrets/litellm.env
+    environment:
+      - PORT=4000
+      - LITELLM_MODE=PRODUCTION
+      - DATABASE_URL=postgresql://admin:Pass123qp@postgres:5432/litellm_db_standalone
+    command: ["--config", "/app/config.yaml", "--host", "0.0.0.0", "--port", "4000"]
+
+volumes:
+  litellm-standalone-data:
+    name: litellm-standalone-data
+
+networks:
+  litellm-standalone:
+    name: litellm-standalone
+  postgres-net:
+    external: true

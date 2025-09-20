@@ -1,0 +1,56 @@
+[info] HTTP probe (port 80)
+[command]
+curl -v --resolve litellm.linuxserver.lan:80:192.168.1.13 http://litellm.linuxserver.lan
+
+[output]
+* Added litellm.linuxserver.lan:80:192.168.1.13 to DNS cache
+* Hostname litellm.linuxserver.lan was found in DNS cache
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 192.168.1.13:80...
+* Connected to litellm.linuxserver.lan (192.168.1.13) port 80
+> GET / HTTP/1.1
+> Host: litellm.linuxserver.lan
+> User-Agent: curl/8.5.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Content-Length: 835
+< Content-Type: text/html; charset=utf-8
+< Date: Thu, 18 Sep 2025 12:17:33 GMT
+< Server: uvicorn
+< 
+{ [835 bytes data]
+100   835  100   835    0     0   456k      0 --:--:-- --:--:-- --:--:--  815k
+* Connection #0 to host litellm.linuxserver.lan left intact
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <link type="text/css" rel="stylesheet" href="/swagger/swagger-ui.css">
+    <link rel="shortcut icon" href="/swagger/favicon.png">
+    <title>LiteLLM API - Swagger UI</title>
+    </head>
+    <body>
+    <div id="swagger-ui">
+    </div>
+    <script src="/swagger/swagger-ui-bundle.js"></script>
+    <!-- `SwaggerUIBundle` is now available on the page -->
+    <script>
+    const ui = SwaggerUIBundle({
+        url: '/openapi.json',
+    "dom_id": "#swagger-ui",
+"layout": "BaseLayout",
+"deepLinking": true,
+"showExtensions": true,
+"showCommonExtensions": true,
+oauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',
+    presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+    })
+    </script>
+    </body>
+    </html>
+    

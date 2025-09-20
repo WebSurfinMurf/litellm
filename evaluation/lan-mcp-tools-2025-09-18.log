@@ -1,0 +1,7 @@
+Attempted: curl -sS -N -H 'Authorization: Bearer <redacted>' -H 'x-mcp-servers: mcp_postgres,mcp_filesystem' -H 'Accept: text/event-stream' http://litellm.linuxserver.lan/mcp/tools
+Result: DNS lookup failed in Codex sandbox (curl exit code 6).
+
+Retry: curl -sS -N --resolve litellm.linuxserver.lan:80:192.168.1.13 -H 'Authorization: Bearer <redacted>' -H 'x-mcp-servers: mcp_postgres,mcp_filesystem' -H 'Accept: text/event-stream' http://litellm.linuxserver.lan/mcp/tools
+Result: TCP connect to 192.168.1.13:80 refused/blocked (curl exit code 7). CLI host lacks route to LAN despite external workstation resolving hostname.
+
+Action: LAN validation must be run from a host on the same network segment (e.g., LinuxServer) or network access must be granted to the sandbox environment.

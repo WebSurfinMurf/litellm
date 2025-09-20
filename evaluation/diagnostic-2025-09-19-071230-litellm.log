@@ -1,0 +1,40 @@
+[92m11:07:54 - LiteLLM Proxy:ERROR[0m: auth_exception_handler.py:79 - litellm.proxy.proxy_server.user_api_key_auth(): Exception occured - 
+Requester IP Address:172.22.0.4
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/site-packages/litellm/proxy/auth/user_api_key_auth.py", line 977, in _user_api_key_auth_builder
+    raise ProxyException(
+    ...<4 lines>...
+    )
+litellm.proxy._types.ProxyException
+[92m11:08:54 - LiteLLM Proxy:ERROR[0m: auth_exception_handler.py:79 - litellm.proxy.proxy_server.user_api_key_auth(): Exception occured - 
+Requester IP Address:172.22.0.4
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/site-packages/litellm/proxy/auth/user_api_key_auth.py", line 977, in _user_api_key_auth_builder
+    raise ProxyException(
+    ...<4 lines>...
+    )
+litellm.proxy._types.ProxyException
+[92m11:09:54 - LiteLLM Proxy:ERROR[0m: auth_exception_handler.py:79 - litellm.proxy.proxy_server.user_api_key_auth(): Exception occured - 
+Requester IP Address:172.22.0.4
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/site-packages/litellm/proxy/auth/user_api_key_auth.py", line 977, in _user_api_key_auth_builder
+    raise ProxyException(
+    ...<4 lines>...
+    )
+litellm.proxy._types.ProxyException
+[92m11:10:54 - LiteLLM Proxy:ERROR[0m: auth_exception_handler.py:79 - litellm.proxy.proxy_server.user_api_key_auth(): Exception occured - 
+Requester IP Address:172.22.0.4
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/site-packages/litellm/proxy/auth/user_api_key_auth.py", line 977, in _user_api_key_auth_builder
+    raise ProxyException(
+    ...<4 lines>...
+    )
+litellm.proxy._types.ProxyException
+[92m11:11:54 - LiteLLM Proxy:ERROR[0m: auth_exception_handler.py:79 - litellm.proxy.proxy_server.user_api_key_auth(): Exception occured - 
+Requester IP Address:172.22.0.4
+Traceback (most recent call last):
+  File "/usr/lib/python3.13/site-packages/litellm/proxy/auth/user_api_key_auth.py", line 977, in _user_api_key_auth_builder
+    raise ProxyException(
+    ...<4 lines>...
+    )
+litellm.proxy._types.ProxyException

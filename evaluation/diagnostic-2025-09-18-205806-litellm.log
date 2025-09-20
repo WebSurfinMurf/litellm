@@ -1,0 +1,78 @@
+2025-09-19 00:54:44,435 - litellm_proxy_extras - INFO - Running prisma migrate deploy
+{"message": "Running prisma migrate deploy", "level": "INFO", "timestamp": "2025-09-19T00:54:44.435947"}
+2025-09-19 00:54:45,925 - litellm_proxy_extras - INFO - prisma migrate deploy stdout: Prisma schema loaded from schema.prisma
+Datasource "client": PostgreSQL database "litellm_db", schema "public" at "postgres:5432"
+
+34 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+
+{"message": "prisma migrate deploy stdout: Prisma schema loaded from schema.prisma\nDatasource \"client\": PostgreSQL database \"litellm_db\", schema \"public\" at \"postgres:5432\"\n\n34 migrations found in prisma/migrations\n\n\nNo pending migrations to apply.\n", "level": "INFO", "timestamp": "2025-09-19T00:54:45.925121"}
+2025-09-19 00:54:45,925 - litellm_proxy_extras - INFO - prisma migrate deploy completed
+{"message": "prisma migrate deploy completed", "level": "INFO", "timestamp": "2025-09-19T00:54:45.925282"}
+Using json logs. Setting log_config to None.
+
+   ██╗     ██╗████████╗███████╗██╗     ██╗     ███╗   ███╗
+   ██║     ██║╚══██╔══╝██╔════╝██║     ██║     ████╗ ████║
+   ██║     ██║   ██║   █████╗  ██║     ██║     ██╔████╔██║
+   ██║     ██║   ██║   ██╔══╝  ██║     ██║     ██║╚██╔╝██║
+   ███████╗██║   ██║   ███████╗███████╗███████╗██║ ╚═╝ ██║
+   ╚══════╝╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝     ╚═╝
+
+
+   ██╗     ██╗████████╗███████╗██╗     ██╗     ███╗   ███╗
+   ██║     ██║╚══██╔══╝██╔════╝██║     ██║     ████╗ ████║
+   ██║     ██║   ██║   █████╗  ██║     ██║     ██╔████╔██║
+   ██║     ██║   ██║   ██╔══╝  ██║     ██║     ██║╚██╔╝██║
+   ███████╗██║   ██║   ███████╗███████╗███████╗██║ ╚═╝ ██║
+   ╚══════╝╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝     ╚═╝
+
+[MCP Info] No tools configuration file provided. All available tools will be enabled.
+[MCP Info] No tools configuration file provided. All available tools will be enabled.
+PostgreSQL MCP server running on stdio
+Shutting down PostgreSQL MCP server...
+
+   ██╗     ██╗████████╗███████╗██╗     ██╗     ███╗   ███╗
+   ██║     ██║╚══██╔══╝██╔════╝██║     ██║     ████╗ ████║
+   ██║     ██║   ██║   █████╗  ██║     ██║     ██╔████╔██║
+   ██║     ██║   ██║   ██╔══╝  ██║     ██║     ██║╚██╔╝██║
+   ███████╗██║   ██║   ███████╗███████╗███████╗██║ ╚═╝ ██║
+   ╚══════╝╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝     ╚═╝
+
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/workspace/projects', '/workspace/mcp-scratch' ]
+[92m00:54:50 - LiteLLM:WARNING[0m: mcp_server_manager.py:538 - Client operation cancelled for monitoring
+[92m00:54:50 - LiteLLM:WARNING[0m: mcp_server_manager.py:557 - Task cancelled while listing tools from monitoring
+[MCP Info] No tools configuration file provided. All available tools will be enabled.
+[MCP Info] No tools configuration file provided. All available tools will be enabled.
+PostgreSQL MCP server running on stdio
+Shutting down PostgreSQL MCP server...
+Secure MCP Filesystem Server running on stdio
+
+   ██╗     ██╗████████╗███████╗██╗     ██╗     ███╗   ███╗
+   ██║     ██║╚══██╔══╝██╔════╝██║     ██║     ████╗ ████║
+   ██║     ██║   ██║   █████╗  ██║     ██║     ██╔████╔██║
+   ██║     ██║   ██║   ██╔══╝  ██║     ██║     ██║╚██╔╝██║
+   ███████╗██║   ██║   ███████╗███████╗███████╗██║ ╚═╝ ██║
+   ╚══════╝╚═╝   ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝     ╚═╝
+
+Client does not support MCP Roots, using allowed directories set from server args: [ '/workspace/projects', '/workspace/mcp-scratch' ]
+[92m00:54:51 - LiteLLM:WARNING[0m: mcp_server_manager.py:538 - Client operation cancelled for monitoring
+[92m00:54:51 - LiteLLM:WARNING[0m: mcp_server_manager.py:557 - Task cancelled while listing tools from monitoring
+[MCP Info] No tools configuration file provided. All available tools will be enabled.
+[MCP Info] No tools configuration file provided. All available tools will be enabled.
+PostgreSQL MCP server running on stdio
+Shutting down PostgreSQL MCP server...
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/workspace/projects', '/workspace/mcp-scratch' ]
+[92m00:54:51 - LiteLLM:WARNING[0m: mcp_server_manager.py:538 - Client operation cancelled for monitoring
+[92m00:54:51 - LiteLLM:WARNING[0m: mcp_server_manager.py:557 - Task cancelled while listing tools from monitoring
+[MCP Info] No tools configuration file provided. All available tools will be enabled.
+[MCP Info] No tools configuration file provided. All available tools will be enabled.
+PostgreSQL MCP server running on stdio
+Shutting down PostgreSQL MCP server...
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ '/workspace/projects', '/workspace/mcp-scratch' ]
+[92m00:54:52 - LiteLLM:WARNING[0m: mcp_server_manager.py:538 - Client operation cancelled for monitoring
+[92m00:54:52 - LiteLLM:WARNING[0m: mcp_server_manager.py:557 - Task cancelled while listing tools from monitoring
