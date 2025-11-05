@@ -1,0 +1,71 @@
+litellm_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  json_logs: true
+  detailed_debug: true
+  mcp_aliases:
+    db: db_main
+    fs: filesystem_main
+
+general_settings:
+  detailed_debug: true
+  log_level: DEBUG
+  database_url: os.environ/DATABASE_URL
+
+# LLM Models
+model_list:
+  - model_name: claude-sonnet-4-5
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: gemini-2.5-flash
+    litellm_params:
+      model: gemini/gemini-2.0-flash-exp
+      api_key: os.environ/GEMINI_API_KEY
+
+  - model_name: gpt-5-mini
+    litellm_params:
+      model: openai/gpt-5-mini
+      api_key: os.environ/OPENAI_API_KEY
+
+
+# Virtual keys for client access - NO KEYCLOAK, NO TRAEFIK
+virtual_keys:
+  - api_key: os.environ/LITELLM_VIRTUAL_KEY_TEST
+    models: ["claude-sonnet-4-5"]
+    mcp_servers: ["postgres_db"]
+    description: "Test key for local network access with MCP"
+
+# MCP servers configuration
+mcp_servers:
+  postgres_db:
+    transport: http
+    url: http://mcp-proxy:9090/postgres/mcp
+    api_keys:
+      - os.environ/LITELLM_MASTER_KEY
+    description: "PostgreSQL database query tool"
+    timeout: 30
+    require_approval: "never"
+
+  # Commented out - not deployed yet
+  # filesystem_main:
+  #   transport: sse
+  #   url: http://mcp-filesystem:8687
+  #   api_keys:
+  #     - ${LITELLM_VIRTUAL_KEY_TEST}
+  #   description: "File system operations and management"
+  #   health_check: /health
+  #   timeout: 30
+
+# Future MCP servers (commented out until deployed)
+# filesystem_main:
+#   transport: sse
+#   url: http://mcp-filesystem:8687
+#   api_keys: [${LITELLM_VIRTUAL_KEY_TEST}]
+#   description: "File system operations"
+#
+# fetch_main:
+#   transport: http
+#   url: http://mcp-fetch:8688
+#   api_keys: [${LITELLM_VIRTUAL_KEY_TEST}]
+#   description: "Web content fetching"

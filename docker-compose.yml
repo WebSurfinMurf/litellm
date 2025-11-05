@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:v1.72.0-stable
+    container_name: litellm
+    restart: unless-stopped
+    command: ["--port", "4000", "--host", "0.0.0.0", "--config", "/app/config/config.yaml"]
+    env_file: $HOME/projects/secrets/litellm.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./config:/app/config:ro
+      - ./tmp:/app/tmp
+    ports:
+      - "4000:4000"
+    networks:
+      - postgres-net
+      - litellm-net
+      - traefik-net
+      - mcp-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-net"
+      - "traefik.http.routers.litellm.rule=Host(`litellm.ai-servicers.com`)"
+      - "traefik.http.routers.litellm.entrypoints=websecure"
+      - "traefik.http.routers.litellm.tls=true"
+      - "traefik.http.routers.litellm.tls.certresolver=letsencrypt"
+      - "traefik.http.services.litellm.loadbalancer.server.port=4000"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4000/ui"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+networks:
+  postgres-net:
+    external: true
+  litellm-net:
+    external: true
+  traefik-net:
+    external: true
+  mcp-net:
+    external: true
