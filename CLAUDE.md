@@ -52,10 +52,20 @@ LiteLLM Gateway (Port 4000)
 
 ## Files & Paths
 - **Deploy Script**: `/home/administrator/projects/litellm/docker-compose.yml`
-- **Configuration**: `/home/administrator/projects/litellm/config/config.yaml`
+- **Configuration**: `/home/administrator/projects/data/litellm/config/config.yaml`
 - **Secrets**: `$HOME/projects/secrets/litellm.env`
-- **Temp Directory**: `/home/administrator/projects/litellm/tmp/`
+- **Temp Directory**: `/home/administrator/projects/data/litellm/tmp/`
 - **Model List**: `/home/administrator/projects/litellm/modellist.md`
+
+## Recent Changes
+
+### Session: 2025-11-04
+- **Data Location Standardization**: Moved runtime data to centralized location
+  - Moved `litellm/config/` to `/projects/data/litellm/config/`
+  - Moved `litellm/tmp/` to `/projects/data/litellm/tmp/`
+  - Updated docker-compose.yml to use new paths
+  - Removed empty `litellm/tools/` directory
+  - Follows project data standard: all runtime data in `projects/data/{project}/`
 
 ## Configuration
 

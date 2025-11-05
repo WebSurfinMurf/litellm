@@ -10,8 +10,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     volumes:
-      - ./config:/app/config:ro
-      - ./tmp:/app/tmp
+      - $HOME/projects/data/litellm/config:/app/config:ro
+      - $HOME/projects/data/litellm/tmp:/app/tmp
     ports:
       - "4000:4000"
     networks:
