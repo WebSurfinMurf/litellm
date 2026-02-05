@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   litellm:
-    image: ghcr.io/berriai/litellm:v1.72.0-stable
+    image: ghcr.io/berriai/litellm:main-stable
     container_name: litellm
     restart: unless-stopped
     command: ["--port", "4000", "--host", "0.0.0.0", "--config", "/app/config/config.yaml"]
@@ -28,11 +28,11 @@ services:
       - "traefik.http.routers.litellm.tls.certresolver=letsencrypt"
       - "traefik.http.services.litellm.loadbalancer.server.port=4000"
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4000/ui"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:4000/health/liveliness')"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
     logging:
       driver: json-file
       options:

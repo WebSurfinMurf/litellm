@@ -4,13 +4,13 @@
 LiteLLM is a unified API gateway providing access to multiple LLM providers (OpenAI, Anthropic, Google) through a single OpenAI-compatible interface.
 
 ## Current Status
-- **Status**: ✅ RUNNING
+- **Status**: ✅ RUNNING (healthy)
 - **Container**: litellm
-- **Version**: v1.72.0-stable
+- **Version**: main-stable (latest)
 - **Port**: 4000
 - **Networks**: postgres-net, litellm-net, traefik-net, mcp-net
 - **External URL**: https://litellm.ai-servicers.com
-- **Last Updated**: 2025-09-30
+- **Last Updated**: 2026-02-03
 
 ## Architecture
 ```
@@ -28,27 +28,17 @@ LiteLLM Gateway (Port 4000)
 - **Internal API**: http://litellm:4000/v1 (from Docker containers)
 - **External API**: https://litellm.ai-servicers.com/v1 (via Traefik)
 - **Web UI**: https://litellm.ai-servicers.com/ui
-- **Master Key**: sk-e0b742bc6575adf26c7d356c49c78d8fd08119fcde1d6e188d753999b5f956fc
+- **Master Key**: See `$HOME/projects/secrets/litellm.env` (LITELLM_MASTER_KEY)
 
-## Available Models
+## Available Models (3)
 
-### OpenAI GPT Models (7)
-- gpt-5 (reasoning model, brief responses)
-- gpt-5-chat-latest (shows detailed work)
-- gpt-5-mini, gpt-5-nano
-- gpt-4.1, gpt-4o, gpt-4o-mini
+| Model Name | Provider | Backend Model | Status |
+|------------|----------|---------------|--------|
+| claude-sonnet-4-5 | Anthropic | claude-sonnet-4-5-20250929 | ✅ Working |
+| gemini-3-flash | Google | gemini-3-flash-preview | ✅ Working |
+| gpt-5-mini | OpenAI | gpt-5-mini-2025-08-07 | ✅ Working |
 
-### Anthropic Claude Models (4)
-- claude-opus-4.1 (latest, most capable)
-- claude-opus-4
-- claude-thinking (extended reasoning)
-- claude-sonnet-4 (fast, balanced)
-
-### Google Gemini Models (8)
-- gemini-2.5-pro, gemini-2.5-flash
-- gemini-2.5-flash-lite, gemini-2.5-flash-image-preview
-- gemini-2.5-flash-preview-tts, gemini-2.5-pro-preview-tts
-- gemini-1.5-pro, gemini-1.5-flash (legacy)
+All models support tool calling and can access MCP tools.
 
 ## Files & Paths
 - **Deploy Script**: `/home/administrator/projects/litellm/docker-compose.yml`
@@ -58,6 +48,12 @@ LiteLLM Gateway (Port 4000)
 - **Model List**: `/home/administrator/projects/litellm/modellist.md`
 
 ## Recent Changes
+
+### Session: 2026-02-03
+- **Updated to latest version**: `main-stable` image
+- **Fixed healthcheck**: Changed from wget to python urllib (wget not in new image)
+- **Healthcheck endpoint**: Now uses `/health/liveliness` instead of `/ui`
+- **Start period**: Increased to 60s for migration time
 
 ### Session: 2025-11-04
 - **Data Location Standardization**: Moved runtime data to centralized location
@@ -90,10 +86,11 @@ Located in `/home/administrator/projects/litellm/config/config.yaml`:
 - **Authentication**: Master key
 - **Status**: ✅ Working
 
-### MCP Middleware
-- **Endpoint**: http://litellm:4000/v1
-- **Models**: Used for AI tool execution
-- **Network**: Connected via litellm-net
+### MCP Integration
+- **MCP Tools Endpoint**: `/mcp/tools/list` and `/mcp/tools/call`
+- **Configured Server**: postgres_db (via mcp-proxy:9090)
+- **Available Tools**: describe_table, execute_query, get_table_constraints, get_table_stats, list_tables
+- **Network**: Connected via mcp-net
 - **Status**: ✅ Working
 
 ## Common Commands
@@ -117,9 +114,10 @@ docker compose up -d
 ```
 
 ## Health Checks
-- **Endpoint**: http://localhost:4000/ui
+- **Endpoint**: http://localhost:4000/health/liveliness
+- **Method**: Python urllib (wget removed from image)
 - **Interval**: 30 seconds
-- **Start Period**: 30 seconds
+- **Start Period**: 60 seconds (allows for migrations)
 - **Retries**: 3
 
 ## Logging
@@ -175,4 +173,5 @@ docker compose up -d
 
 ---
 *Created: 2025-09-30 by Claude*
-*Status: Fully operational with 19 models across 3 providers*
+*Last Updated: 2026-02-03*
+*Status: Fully operational with 3 models, MCP integration working*
