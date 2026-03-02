@@ -15,13 +15,12 @@
 | 4 | `claude-haiku-4-5` | Anthropic | claude-haiku-4-5 | $1.00 | $5.00 | Budget |
 | 5 | `gemini-3.1-pro` | Google | gemini-3.1-pro-preview | $2.00 | $12.00 | Mid |
 | 6 | `gemini-3-flash` | Google | gemini-3-flash-preview | $0.50 | $3.00 | Budget |
-| 7 | `gemini-3-flash-mcp` | Google | gemini-3-flash-preview | $0.50 | $3.00 | Budget |
-| 8 | `gemini-2.5-pro` | Google | gemini-2.5-pro | $1.25 | $10.00 | Mid |
-| 9 | `gemini-2.5-flash` | Google | gemini-2.5-flash | $0.30 | $2.50 | Budget |
-| 10 | `gpt-5.2` | OpenAI | gpt-5.2 | $1.75 | $14.00 | Mid |
-| 11 | `gpt-5.2-pro` | OpenAI | gpt-5.2-pro | $21.00 | $168.00 | Premium |
-| 12 | `gpt-5-mini` | OpenAI | gpt-5-mini | $0.25 | $2.00 | Budget |
-| 13 | `o3` | OpenAI | o3 | $2.00 | $8.00 | Mid |
+| 7 | `gemini-2.5-pro` | Google | gemini-2.5-pro | $1.25 | $10.00 | Mid |
+| 8 | `gemini-2.5-flash` | Google | gemini-2.5-flash | $0.30 | $2.50 | Budget |
+| 9 | `gpt-5.2` | OpenAI | gpt-5.2 | $1.75 | $14.00 | Mid |
+| 10 | `gpt-5.2-pro` | OpenAI | gpt-5.2-pro | $21.00 | $168.00 | Premium |
+| 11 | `gpt-5-mini` | OpenAI | gpt-5-mini | $0.25 | $2.00 | Budget |
+| 12 | `o3` | OpenAI | o3 | $2.00 | $8.00 | Mid |
 
 ---
 
@@ -58,13 +57,12 @@
 **Batch API**: 50% discount on all models
 **Cache reads**: 90% discount on input tokens
 
-### Google Gemini (5 models)
+### Google Gemini (4 models)
 
 | Model | Input | Output | Notes |
 |-------|-------|--------|-------|
 | gemini-3.1-pro | $2.00 | $12.00 | Latest flagship (preview) |
 | gemini-3-flash | $0.50 | $3.00 | Fast + cheap (preview) |
-| gemini-3-flash-mcp | $0.50 | $3.00 | Same as above + MCP postgres access |
 | gemini-2.5-pro | $1.25 | $10.00 | Stable pro model |
 | gemini-2.5-flash | $0.30 | $2.50 | Cheapest Google model |
 
@@ -93,7 +91,7 @@
 | LiveKit Voice Agent (ChatGPT room) | `gpt-5-mini` | Cost-effective for voice |
 | LiveKit Voice Agent (Gemini room) | `gemini-3-flash` | Fast + cheap for voice |
 | aiagentchat (gemini backend) | `gemini-3-flash` | High-volume chat, low cost |
-| MCP postgres queries | `gemini-3-flash-mcp` | MCP-enabled with DB access |
+| MCP postgres queries | gemini + MCP (LiteLLM) | MCP-enabled with DB access |
 | Open WebUI (user choice) | Any | User selects per-conversation |
 
 ---
