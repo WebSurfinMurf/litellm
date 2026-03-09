@@ -4,6 +4,7 @@ services:
   litellm:
     image: ghcr.io/berriai/litellm:main-stable
     container_name: litellm
+    init: true
     restart: unless-stopped
     command: ["--port", "4000", "--host", "0.0.0.0", "--config", "/app/config/config.yaml"]
     env_file: $HOME/projects/secrets/litellm.env
