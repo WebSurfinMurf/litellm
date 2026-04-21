@@ -14,15 +14,18 @@ LiteLLM is a unified API gateway providing access to multiple LLM providers (Ope
 
 ## Architecture
 ```
-Applications (Open WebUI, MCP Middleware)
+Applications (Open WebUI, MCP Middleware, agent-memory)
     ↓
 LiteLLM Gateway (Port 4000)
     ↓
-┌────────────────┬──────────────────┬────────────────┐
-│   OpenAI API   │  Anthropic API   │  Google AI API │
-│  (GPT models)  │ (Claude models)  │ (Gemini models)│
-└────────────────┴──────────────────┴────────────────┘
+┌────────────────┬──────────────────┬────────────────┬──────────────────┐
+│   OpenAI API   │  Anthropic API   │  Google AI API │ Infinity (local) │
+│  (GPT models)  │ (Claude models)  │ (Gemini models)│   (embeddings)   │
+└────────────────┴──────────────────┴────────────────┴──────────────────┘
 ```
+
+Model alias `bge-small` routes to the local Infinity container
+(`~/projects/infinity/`) — no external API call for embeddings.
 
 ## Access Methods
 - **Internal API**: http://litellm:4000/v1 (from Docker containers)
